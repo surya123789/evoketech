@@ -33,3 +33,16 @@ pipeline {
         }
       }
     }
+    stage('uploading artifacts to JFROG(artifactory repo)') {
+            container (
+            steps {
+                rtUpload (
+                    serverId: 'artifactoryserver',
+                    spec: '''{
+                        "files": [
+                            {
+                            "pattern": "target/**.war",
+                            "target": "maven/"
+                            }
+                        ]
+                     }''',
