@@ -1,0 +1,886 @@
+tabledashboard_versiondashboard_versionaCREATE TABLE `dashboard_version` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `dashboard_id` INTEGER NOT NULL
+, `parent_version` INTEGER NOT NULL
+, `restored_from` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `created_by` INTEGER NOT NULL
+, `message` TEXT NOT NULL
+, `data` TEXT NOT NULL
+)q_
+1tabletest_datatest_data_CREATE TABLE `test_data` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `metric1` TEXT NULL
+, `metric2` TEXT NULL
+, `value_big_int` INTEGER NULL
+, `value_double` REAL NULL
+, `value_float` REAL NULL
+, `value_int` INTEGER NULL
+, `time_epoch` INTEGER NOT NULL
+, `time_date_time` DATETIME NOT NULL
+, `time_time_stamp` DATETIME NOT NULL
+)q^;!indexIDX_annotation_alert_idannotation^CREATE INDEX `IDX_annotation_alert_id` ON `annotation` (`alert_id`)]W!SindexIDX_annotation_org_id_epoch_end_epochannotationXCREATE INDEX `IDX_annotation_org_id_epoch_end_epoch` ON `annotation` (`org_id`,`epoch_end`,`epoch`)H\q!
+                                                                                                                                 indexIDX_annotation_org_id_dashboard_id_epoch_end_epochannotationWCREATE INDEX `IDX_annotation_org_id_dashboard_id_epoch_end_epoch` ON `annotation` (`org_id`,`dashboard_id`,`epoch_end`,`epoch`)ZG!/indexIDX_annotation_org_id_updatedannotation]CREATE INDEX `IDX_annotation_org_id_updated` ON `annotation` (`org_id`,`updated`)YG!/indexIDX_annotation_org_id_createdannotationVCREATE INDEX `IDX_annotation_org_id_created` ON `annotation` (`org_id`,`created`).X[)eindexUQE_annotation_tag_annotation_id_tag_idannotation_tag\CREATE UNIQUE INDEX `UQE_annotation_tag_annotation_id_tag_id` ONgVannotation_tag` (`annotation_id`,`tag_id`)
+£
+ ¨
+ù
+
+3Add index for org_id_epoch_end_epoch on annotation tableCREATE INDEX `IDX_annotation_org_id_epoch_end_epoch` ON `annotation` (`org_id`,`epoch3Add index for org_id_dashboard_id_epoch_end_epoch on annotation tableCREATE INDEX `IDX_annotation_org_id_dashboard_id_epoch_end_epoch` ON `an3Remove index org_id_dashboard_id_panel_id_epoch from annotation tableDROP INDEX `IDX_annotation_org_id_dashboard_id_panel_id_epoch`2022-12-293Add index for epoch_endCREATE INDEX `IDX_annotation_org_id_epoch_epoch_end` ON `annotation` (`org_id`,`epoch`,`epoch_end`);2022-12-29 10:11:13Convert existing annotations from seconds to millisecondsUPDATE annotation SET epoch = (epoch*1000) where epoch < 99999999992022-12-29 10:11:3Add index for updated in annotation tableCREATE INDEX `IDX_annotation_org_id_updated` ON `annotation` (`org_id`,`updated`);2022-12-29 10:11:13Add index for created in annotation tableCREATE INDEX `IDX_annotation_org_id_created` ON `annotation` (`org_id`,`created`);2022-12-29 10:11:13copy annotation_tag v2 to v3INSERT INTO `annotation_tag` (`annotation_id`12-29 10:11:16+Euid > 02022-12-29 10:11:16^`E]11:16zaiq
+, `tag_id`) SELECT `annotation_id`
+3create index UQE_annotation_tag_annotation_id_tag_id - Add unique index annotation_tag.annotation_id_tag_id V3CREATE UNIQUE INDEX `UQE_annota3Create annotation_tag table v3CREATE TABLE IF NOT EXISTS `annotation_tag` ();2022-12-29 10:11:16XIK
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `annotation_id` INTEGER NOT NULL
+, `tag_id` INTEGER NOT NULL
+);2022-12-29 10:11:16
+3Add unique index annotation_tag.annotation_id_tag_idCREATE UNIQUE INDEX `UQE_annotation_tag_annotation_id_tag_id` ON `annotation_tag` (`annot3Create annotation_tag table v2CREATE TABLE IF NOT EXISTS `annotation_tag` (
+`annotation_id` INTEGER NOT NULL
+, `tag_id` INTEGER NOT NULL
+);2022-12-29 10:11:16
+
+
+²j
+  Ò
+   1
+    Q
+à       T
+3add index dashboard_acl_dashboard_idCREATE INDEX `IDX_dashboard_acl_dashboard_id` ON `dashboard_acl` (`dashboard_id`);2022-12-29 10:11:16A
+3create dashboard acl tableCREATE TABLE IF NOT EXISTS `dashboard_acl` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `dashboard_id` INTEGER NOT NULL
+, `user_id` INTEGER NULL
+, `team_id` INTEGER NULL
+, `permission` INTEGER NOT NULL DEFAULT 4
+, `role` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+);2022-12-29 10:11:1a
+3add unique index team_member_org_id_team_id_user_idCREATE UNIQUE INDEX `UQE_team_member_org_id_team_id_user_id` ON `team_member` (`org_id`,`t3create team member tableCREATE TABLE IF NOT EXISTS `team_member` (ON `team_member` (`org_id`);2022-12-29 10:11:16"=k
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `team_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3create team tableCREATE TABLE IF NOT EXISTS `team` (ON `team` (`org_id`);2022-12-29 10:11:16q/,`name`);2022-12-29 10:11:16cz7u
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3alter dashboard_version.data to mediumtext v1SELECT 0;2022-12-29 10:11:1w
+3save existing dashboard data in dashboard_version table v1INSERT INTO dashboard_version
+(
+        dashboard_id,
+        version,
+        parent_version,
+        restored_from,
+        created,
+        created_by,
+        message,
+        data
+)
+SELECT
+        dashboard.id,
+        dashboard.version,
+        dashboard.version,
+        dashboard.version,
+        dashboard.updated,
+        COALESCE(dashboard.updated_by, -1),
+        '',
+        dashboard.data
+3add unique index dashboard_version.dashboard_id and dashboard_version.versionCREATE UNIQUE INDEX `UQE_dashboard_version_dashboard_id_version`3add index dashboard_version.dashboard_idCREATE INDEX `IDX_dashboard_version_dashboard_id` ON `dashboard_version` (`dashboard_id`);2022-12-29 10:11:16O
+3create dashboard_version table v1CREATE TABLE IF NOT EXISTS `dashboard_version` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `dashboard_id` INTEGER NOT NULL
+, `parent_version` INTEGER NOT NULL
+, `restored_from` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `created_by` INTEGER NOT NULL
+, `message` TEXT NOT NULL
+, `data` TEXT NOT NULL
+);2022-12-29 10:11:169
+3create test_data tableCREATE TABLE IF NOT EXISTS `test_data` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `metric1` TEXT NULL
+, `metric2` TEXT NULL
+, `value_big_int` INTEGER NULL
+, `value_double` REAL NULL
+, `value_float` REAL NULL
+, `value_int` INTEGER NULL
+, `time_epoch` INTEGER NOT NULL
+, `time_date_time` DATETIME NOT NULL
+, `time_time_stamp` DATETIME NOT NULL
+);2022-12-29 10:11:16
+
+
+
+
+
+
+¯Ø¯'
+!!ÿÿEditor2017-06-202017-06-20&
+        !!ÿÿViewer2017-06-202017-06-20
+õûõÿ    ÿ
+zCóÿ    ÿ
+ æ
+  [
+   ?
+3create index IDX_user_auth_auth_module_auth_id - v1CREATE INDEX `IDX_user_auth_auth_module_auth_id` ON `user_auth` (`auth_module`,`auth_id`);3create user auth tableCREATE TABLE IF NOT EXISTS `user_auth` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `user_id` INTEGER NOT NULL
+, `auth_module` TEXT NOT NULL
+, `auth_id` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+3copy login_attempt v1 to v2INSERT INTO `login_attempt` (`username`mp_qwerty`2022-12-29 10:11:16C
+, `ip_address`
+, `id`) SELECT `username`
+, `ip_address`
+3create login_attempt v2CREATE TABLE IF NOT EXISTS `login_attempt` (_attempt_username` ON `login_attempt` (`username`);2022-12-29 10:11:16;
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `username` TEXT NOT NULL
+, `ip_address` TEXT NOT NULL
+, `created` INTEGER NOT NULL DEFAULT 0
+3Rename table login_attempt to login_attempt_tmp_qwerty - v1ALTER TABLE `login_attempt` RENAME TO `login_attempt_tmp_qwerty`2022-12-29 10:11:13create login attempt tableCREATE TABLE IF NOT EXISTS `login_attempt` (me` ON `login_attempt` (`username`);2022-12-29 10:11:16Aw
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `username` TEXT NOT NULL
+, `ip_address` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+3create tag tableCREATE TABLE IF NOT EXISTS `tag` (g_key_value` ON `tag` (`key`,`value`);2022-12-29 10:11:16.
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `key` TEXT NOT NULL
+, `value` TEXT NOT NULL
+);2022-12-29 10:11:163
+3delete acl rules for deleted dashboards and foldersDELETE FROM dashboard_acl WHERE dashboard_id NOT IN (SELECT id FROM dashboard) AND dashboard_id != -12022-12-29 10:11:16
+3save default acl rules in dashboard_acl table
+INSERT INTO dashboard_acl
+        (
+           org_id,
+           dashboard_id,
+           permission,
+           role,
+           created,
+           updated
+        )
+        VALUES
+           (-1,-1, 1,'Viewer','2017-06-20','2017-06-20'),
+           (-1,-1, 2,'Editor','2017-06-20','2017-06-20')
+        2022-12-29 10:11:16
+3add unique index dashboard_acl_dashboard_id_team_idCREATE UNIQUE INDEX `UQE_dashboard_acl_dashboard_id_team_id` ON `dashboard_acl` (`dashboar3add unique index dashboard_acl_dashboard_id_user_idCREATE UNIQUE INDEX `UQE_dashboard_acl_dashboard_id_user_id` ON `dashboard_acl` (`dashboard_id`,`user_id`);2022-12-29 10:11:16
+óúóÿ    ÿ
+#¦*
+ Úw©â\Sµstableshort_urlshort_urlCREATE TABLE `short_url` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+¶=!%indexUQE_cache_data_cache_keycache_data
+CREATE UNIQUE INDEX `UQE_cache_data_cache_key` ON `cache_data` (`cache_key`)4G!indexsqlite_autoindex_cache_data_1cache_data
+                                                                                                                           9!!;tablecache_datacache_dataCREATE TABLE `cache_data` (
+`cache_key` TEXT PRIMARY KEY NOT NULL
+, `data` BLOB NOT NULL
+, `expires` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+)C+#indexIDX_user_auth_token_user_iduser_auth_tokenCREATE INDEX `IDX_user_auth_token_user_id` ON `user_auth_token` (`user_id`)"~S+QindexUQE_user_auth_token_prev_auth_tokenuser_auth_tokenCREATE UNIQUE INDEX `UQE_user_auth_token_prev_auth_token` ON `user_auth_token` (`prev_auth_token`)kI'/indexIDX_dashboard_acl_dashboard_iddashboard_acllCREATE INDEX `IDX_dashboard_acl_dashboard_id` ON `dashboard_acl` (`dashboard_id`)}I+=indexUQE_user_auth_token_auth_tokenuser_auth_tokenCREATE UNIQUE INDEX `UQE_user_auth_token_auth_token` ON `user_auth_token` (`auth_token`)K|++Mtableuser_auth_tokenuser_auth_tokenCREATE TABLE `user_auth_token` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `user_id` INTEGER NOT NULL
+, `auth_token` TEXT NOT NULL
+, `prev_auth_token` TEXT NOT NULL
+, `user_agent` TEXT NOT NULL
+, `client_ip` TEXT NOT NULL
+, `auth_token_seen` INTEGER NOT NULL
+, `seen_at` INTEGER NULL
+, `rotated_at` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+, `updated_at` INTEGER NOT NULL
+, `revoked_at` INTEGER NULL)
+                            {G#9indexUQE_server_lock_operation_uidserver_lock~CREATE UNIQUE INDEX `UQE_server_lock_operation_uid` ON `server_lock` (`operation_uid`)Rz##ktableserver_lockserver_lock}CREATE TABLE `server_lock` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `operation_uid` TEXT NOT NULL
+, `version` INTEGER NOT NULL
+, `last_execution` INTEGER NOT NULL
+)jy7
+    indexIDX_user_auth_user_iduser_auth|CREATE INDEX `IDX_user_auth_user_id` ON `user_auth` (`user_id`)xO?indexIDX_user_auth_auth_module_auth_iduser_authzCREATE INDEX `IDX_user_auth_auth_module_auth_id` ON `user_auth` (`auth_module`,`auth_id`)|w
+Gtableuser_authuser_authwCREATE TABLE `user_auth` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `user_id` INTEGER NOT NULL
+, `auth_module` TEXT NOT NULL
+, `auth_id` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `o_auth_access_token` TEXT NULL, `o_auth_refresh_token` TEXT NULL, `o_auth_token_type` TEXT NULL, `o_auth_expiry` DATETIME NULL, `o_auth_id_token` TEXT NULL)}vA'indexIDX_login_attempt_usernamelogin_attemptyCREATE INDEX `IDX_login_attempt_username` ON `login_attempt` (`username`)Vu''ktablelogin_attemptlogin_attemptxCREATE TABLE `login_attempt` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `username` TEXT NOT NULL
+, `ip_address` TEXT NOT NULL
+, `created` INTEGER NOT NULL DEFAULT 0
+indexUQE_tag_key_valuetagvCREATE UNIQUE INDEX `UQE_tag_key_value` ON `tag` (`key`,`value`)rutabletagtaguCREATE TABLE `tag` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `key` TEXT NOT NULL
+, `value` TEXT NOT NULL
+)qE''indexIDX_dashboard_acl_permissiondashboard_acltCREATE INDEX `IDX_dashboard_acl_permission` ON `dashboard_acl` (`permission`pG'/indexIDX_dashboard_acl_org_id_roledashboard_aclsCREATE INDEX `IDX_dashboard_acl_org_id_role` ON `dashboard_acl` (`org_id`,`role`)zo?'ndexIDX_dashboard_acl_team_iddashboard_aclrCREATE INDEX `IDX_dashboard_acl_team_id` ON `dashboard_acl` (`team_id`)zn?'ndexIDX_dashboard_acl_user_iddashboard_aclpCREATE INDEX `IDX_dashboard_acl_user_id` ON `dashboard_acl` (`user_id`)*mY'aindexUQE_dashboard_acl_dashboard_id_team_iddashboard_acloCREATE UNIQUE INDEX `UQE_dashboard_acl_dashboard_id_team_id` ON `dashboard_acl` (`dashboard_id`,`team_id`)*lY'aindexUQE_dashboard_acl_dashboard_id_user_iddashboard_aclmCREATE UNIQUE INDEX `UQE_dashboard_acl_dashboard_id_user_id` ON `dashboard_acl` (`dashboard_id`,`user_id`)
+÷ü÷
+ççô
+   ÿEditor
+           ÿViewer
+öüö
+à -admin10.131.4.7:43838c­gÓ
+÷       admin
+\
+ ý
+ó
+ $
+3drop index in alert_definition on org_id and title columnsDROP INDEX `IDX_alert_definition_org_id_title`2022-12-29 10:11:16c0
+3add index in alert_definition on org_id and uid columnsCREATE INDEX `IDX_alert_definition_org_id_uid` ON `alert_definition` (`org_id`,`uid`);3add index in alert_definition on org_id and title columnsCREATE INDEX `IDX_alert_definition_org_id_title` ON `alert_definition` (`org_id`,`title`);2022-12-29 10:11:16K
+3recreate alert_definition tableCREATE TABLE IF NOT EXISTS `alert_definition` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `title` TEXT NOT NULL
+, `condition` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `updated` DATETIME NOT NULL
+, `interval_seconds` INTEGER NOT NULL DEFAULT 60
+, `version` INTEGER NOT NULL DEFAULT 0
+, `uid` TEXT NOT NULL DEFAULT 0
+3add index short_url.org_id-uidCREATE UNIQUE INDEX `UQE_short_url_org_id_uid` ON `short_url` (`org_id`,`uid`);2022-12-29 10:11:166?
+3create short_url table v1CREATE TABLE IF NOT EXISTS `short_url` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `uid` TEXT NOT NULL
+, `path` TEXT NOT NULL
+, `created_by` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+, `last_seen_at` INTEGER NULL
+3create cache_data tableCREATE TABLE IF NOT EXISTS `cache_data` (che_data_cache_key` ON `cache_data` (`cache_key`);2022-12-29 10:11:16X;Y
+`cache_key` TEXT PRIMARY KEY NOT NULL
+, `data` BLOB NOT NULL
+, `expires` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+3add unique index user_auth_token.prev_auth_tokenCREATE UNIQUE INDEX `UQE_user_auth_token_prev_auth_token` ON `user_auth_token` (`prev_auth_to3add unique index user_auth_token.auth_tokenCREATE UNIQUE INDEX `UQE_user_auth_token_auth_token` ON `user_auth_token` (`auth_token`);2022-12-23create user auth token tableCREATE TABLE IF NOT EXISTS `user_auth_token` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `user_id` INTEGER NOT NULL
+, `auth_token` TEXT NOT NULL
+, `prev_auth_token` TEXT NOT NULL
+, `user_agent` TEXT NOT NULL
+, `client_ip` TEXT NOT NULL
+, `auth_token_seen` INTEGER NOT NULL
+, `seen_at` INTEGER NULL
+, `rotated_at` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+, `updated_at` INTEGER NOT NULL
+3add index server_lock.operation_uidCREATE UNIQUE INDEX `UQE_server_lock_operation_uid` ON `server_lock` (`operation_uid`);2022-12-29 10:11:163create server_lock tableCREATE TABLE IF NOT EXISTS `server_lock` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `operation_uid` TEXT NOT NULL
+, `version` INTEGER NOT NULL
+, `last_execution` INTEGER NOT NULL
+);2022-12-29 10:11:16K
+3Add OAuth expiry to user_authalter table `user_auth` ADD COLUMN `o_auth_expiry` DATETIME NULL 2022-12-29 10:11:169 10:11:16G
+µÚµ#?delete old login attemptsc­lt$C    cleanup expired auth tokensc­gÄ
+-+Ã?del55b1683d92e767741d80b6d10bd02fb2dc5b68f788596a3f1ea8cf1e1c6afd1e5bb133037a908eb8dc97f19c05cb219bf9639c17b6ae2f91fd472ada0d3f6368Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0115.111.150.194c­m¤c­moc­gÜc­gÜ
+»»D     55b1683d92e767741d80b6d10bd02fb2dc5b68f788596a3f1ea8cf1e1c6afd1e
+»»D     5bb133037a908eb8dc97f19c05cb219bf9639c17b6ae2f91fd472ada0d3f6368
+üü
+
+
+ÅQFÇ8
+®
+1?indexIDX_alert_rule_vOÝs1indexUQE_alert_rule_version_rule_org_id_rule_uid_versionalert_rule_versionCREATE UNIQUE INDEX `UQE_alert_rule_version_rule_org_id_rule_uid_version` ON `alert_rule_version` (`rule_org_id`,`rule_uid`,`version`)
+c11otablealert_rule_versionalert_rule_versionCREATE TABLE `alert_rule_version` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `rule_org_id` INTEGER NOT NULL
+, `rule_uid` TEXT NOT NULL DEFAULT 0
+, `rule_namespace_uid` TEXT NOT NULL
+, `rule_group` TEXT NOT NULL
+, `parent_version` INTEGER NOT NULL
+, `restored_from` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `title` TEXT NOT NULL
+, `condition` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `interval_seconds` INTEGER NOT NULL
+, `no_data_state` TEXT NOT NULL DEFAULT 'NoData'
+, `exec_err_state` TEXT NOT NULL DEFAULT 'Alerting'
+, `for` INTEGER NOT NULL DEFAULT 0, `annotations` TEXT NULL, `labels` TEXT NULL, `rule_group_idx` INTEGER NOT NULL DEFAULT 1)stableshort_urlshort_urlCREATE TABLE `short_url` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `uid` TEXT NOT NULL
+, `path` TEXT NOT NULL
+, `created_by` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+, `last_seen_at` INTEGER NULL
+)x=!%indexUQE_cache_data_cache_keycache_data
+CREATE UNIQUE INDEX `UQE_cacheYs1indexUQE_alert_rule_version_|=!%indexUQE_cache_data_cache_keycache_data
+CREATE UNIQUE INDEX `UQE_cache_data_cache_key` ON `cache_data` (`cache_key`)4G!indexsqlite_autoindex_cache_data_1cache_data
+                                                                                                                           5e!oindexIDX_alert_rule_org_id_dashboard_uid_panel_idalert_ruleCREATE INDEX `IDX_alert_rule_org_id_dashboard_uid_panel_id` ON `alert_rule` (`org_id`,`dashboard_u_!qindexUQE_alert_rule_org_id_namespace_uid_titlealert_rule;
+                                                            i!windexIDX_alert_rule_org_id_namespace_uid_rule_groupalert_ruleCREATE INDEX `IDX_alert_rule_org_id_namespace_uid_rule_group` ON `alert_rule` (`org_id`,`namespace_uid`,`rule_group`)
+                                                                                                   ?!-indexUQE_alert_rule_org_id_uidalert_ruleCREATE UNIQUE INDEX `UQE_alert_rule_org_id_uid` ON `alert_rule` (`org_id`,`uid`)
+>       !!Etablealert_rulealert_ruleCREATE TABLE `alert_rule` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `title` TEXT NOT NULL
+, `condition` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `updated` DATETIME NOT NULL
+, `interval_seconds` INTEGER NOT NULL DEFAULT 60
+, `version` INTEGER NOT NULL DEFAULT 0
+, `uid` TEXT NOT NULL DEFAULT 0
+, `namespace_uid` TEXT NOT NULL
+, `rule_group` TEXT NOT NULL
+, `no_data_state` TEXT NOT NULL DEFAULT 'NoData'
+, `exec_err_state` TEXT NOT NULL DEFAULT 'Alerting'
+, `for` INTEGER NOT NULL DEFAULT 0, `annotations` TEXT NULL, `labels` TEXT NULL, `dashboard_uid` TEXT NULL, `panel_id` INTEGER NULL, `rule_group_idx` INTEGER NOT NULL DEFAULT 1)e)kindexIDX_alert_instance_rule_org_id_current_statealert_instanceCREATE INDEX `IDX_alert_instance_rule_org_id_current_state` ON `alert_instance` (`rule_org_id`,`current_state`)Tw)indexIDX_alert_instance_rule_org_id_rule_uid_current_statealert_instanceCREATE INDEX `IDX_alert_instance_rule_org_id_rule_uid_current_state` ON `alert_instance` (`rule_org_id`,`rule_uid`,`current_state`)<O)indexsqlite_autoindex_alert_instance_1alert_instance7))'tablealert_instancealert_instanceCREATE TABLE `alert_instance` (
+"rule_org_id" INTEGER NOT NULL
+, "rule_uid" TEXT NOT NULL DEFAULT 0
+, `labels` TEXT NOT NULL
+, `labels_hash` TEXT NOT NULL
+, `current_state` TEXT NOT NULL
+, `current_state_since` INTEGER NOT NULL
+, `last_eval_time` INTEGER NOT NULL
+, `current_state_end` INTEGER NOT NULL DEFAULT 0, `current_reason` TEXT NULL, PRIMARY KEY ( "rule_org_id","rule_uid",`labels_hash` ))}=)indexUW?_short_url_org_id_uidshort_urlCREATE UNIQUE INDEX `UQE_short_url_org_id_uid` ON `short_url` (`org_id`,`uid`)
+"
+ %
+3add index rule_org_id, current_state on alert_instanceCREATE INDEX `IDX_alert_instance_rule_org_id_current_state` ON `alert_instance` (`rule_3add index rule_org_id, rule_uid, current_state on alert_instanceCREATE INDEX `IDX_alert_instance_rule_org_id_rule_uid_current_state` ON `aler3rename def_org_id to rule_org_id in alert_instanceALTER TABLE alert_instance RENAME COLUMN def_org_id TO rule_org_id;2022-12-29 10:11:16
+3remove index def_org_id, def_uid, current_state on alert_instanceDROP INDEX `IDX_alert_instance_def_org_id_def_uid_current_state`2022-12-29 13add column current_state_end to alert_instancealter table `alert_instance` ADD COLUMN `current_state_end` INTEGER NOT NULL DEFAULT 0 2022-12-3add index in alert_instance table on def_org_id, current_state columnsCREATE INDEX `IDX_alert_instance_def_org_id_current_state` ON `alert_in3add index in alert_instance table on def_org_id, def_uid and current_state columnsCREATE INDEX `IDX_alert_instance_def_org_id_def_uid_current_state` ON `alert_instance` (`def_org_id`,`def_uid`,`current_state`);2022-12-29 10:11:16C
+3create alert_instance tableCREATE TABLE IF NOT EXISTS `alert_instance` (
+`def_org_id` INTEGER NOT NULL
+, `def_uid` TEXT NOT NULL DEFAULT 0
+, `labels` TEXT NOT NULL
+, `labels_hash` TEXT NOT NULL
+, `current_state` TEXT NOT NULL
+, `current_state_since` INTEGER NOT NULL
+, `last_eval_time` INTEGER NOT NULL
+3add index in alert_definition_version table on alert_definition_uid and version columnsCREATE UNIQUE INDEX `UQE_alert_definition_version_aler3add index in alert_definition_version table on alert_definition_id and version columnsCREATE UNIQUE INDEX `UQE_alert_definition_version_alert3recreate alert_definition_version tableCREATE TABLE IF NOT EXISTS `alert_definition_version` (-29 10:11:16y[{
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `alert_definition_id` INTEGER NOT NULL
+, `alert_definition_uid` TEXT NOT NULL DEFAULT 0
+, `parent_version` INTEGER NOT NULL
+, `restored_from` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `title` TEXT NOT NULL
+, `condition` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `interval_seconds` INTEGER NOT NULL
+3add unique index in alert_definition on org_id and uid columnsCREATE UNIQUE INDEX `UQE_alert_definition_org_id_uid` ON `alert_definition` (`o3add unique index in alert_definition on org_id and title columnsCREATE UNIQUE INDEX `UQE_alert_definition_org_id_title` ON `alert_definition` (`org_id`,`title`);2022-12-29 10:11:16
+
+
+;
+
+ ó
+
+»
+3add index in alert_rule_version table on rule_org_id, rule_namespace_uid and rule_group columnsCREATE INDEX `IDX_alert_rule_version_rule_org_add index in alert_rule_version table on rule_org_id, rule_uid and version columnsCREATE UNIQUE INDEX `UQE_alert_rule_version_rule_org_id_rule_uid_version` ON `alert_rule_version` (`rule_org_id`,`rule_uid`,`version`);2022-12-29 10:11:16
+3create alert_rule_version tableCREATE TABLE IF NOT EXISTS `alert_rule_version` (             ~K
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `rule_org_id` INTEGER NOT NULL
+, `rule_uid` TEXT NOT NULL DEFAULT 0
+, `rule_namespace_uid` TEXT NOT NULL
+, `rule_group` TEXT NOT NULL
+, `parent_version` INTEGER NOT NULL
+, `restored_from` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `title` TEXT NOT NULL
+, `condition` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `interval_seconds` INTEGER NOT NULL
+, `no_data_state` TEXT NOT NULL DEFAULT 'NoData'
+, `exec_err_state` TEXT NOT NULL DEFAULT 'Alerting'
+3add index in alert_rule on org_id, dashboard_uid and panel_id columnsCREATE INDEX `IDX_alert_rule_org_id_dashboard_uid_panel_id` ON `alert_ru3add index in alert_rule on org_id, namespase_uid and title columnsCREATE UNIQUE INDEX `UQE_alert_rule_org_id_namespace_uid_title` ON `alert_r3add index in alert_rule on org_id, namespace_uid, group_uid columnsCREATE INDEX `IDX_alert_rule_org_id_namespace_uid_rule_group` ON `alert_ru3add index in alert_rule on org_id and uid columnsCREATE UNIQUE INDEX `UQE_alert_rule_org_id_uid` ON `alert_rule` (`org_id`,`uid`);2022-12-29 3add index in alert_rule on org_id and title columnsCREATE UNIQUE INDEX `UQE_alert_rule_org_id_title` ON `alert_rule` (`org_id`,`title`);2022-12-29 10:11:16
+3create alert_rule tableCREATE TABLE IF NOT EXISTS `alert_rule` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `title` TEXT NOT NULL
+, `condition` TEXT NOT NULL
+, `data` TEXT NOT NULL
+, `updated` DATETIME NOT NULL
+, `interval_seconds` INTEGER NOT NULL DEFAULT 60
+, `version` INTEGER NOT NULL DEFAULT 0
+, `uid` TEXT NOT NULL DEFAULT 0
+, `namespace_uid` TEXT NOT NULL
+, `rule_group` TEXT NOT NULL
+, `no_data_state` TEXT NOT NULL DEFAULT 'NoData'
+, `exec_err_state` TEXT NOT NULL DEFAULT 'Alerting'
+3add current_reason column related to current_statealter table `alert_instance` ADD COLUMN `current_reason` TEXT NULL 2022-12-29 10:11:16
+
+
+
+
+
+¶pá\
+ °ô÷cÁº
+3create library_element table v1CREATE TABLE IF NOT EXISTS `library_element` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `folder_id` INTEGER NOT NULL
+, `uid` TEXT NOT NULL
+, `name` TEXT NOT NULL
+, `kind` INTEGER NOT NULL
+, `type` TEXT NOT NULL
+, `description` TEXT NOT NULL
+, `model` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `created_by` INTEGER NOT NULL
+, `updated` DATETIME NOT NULL
+, `updated_by` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+3create alert_image tableCREATE TABLE IF NOT EXISTS `alert_image` (UQE_alert_image_token` ON `alert_image` (`token`);2022-12-29 10:11:16=U
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `token` TEXT NOT NULL
+, `path` TEXT NOT NULL
+, `url` TEXT NOT NULL
+, `created_at` DATETIME NOT NULL
+, `expires_at` DATETIME NOT NULL
+);2022-12-29 10:11:16^h
+3add index to uniquify (record_key, record_type, org_id) columnsCREATE UNIQUE INDEX `UQE_provenance_type_record_type_record_key_org_id` ON `provenance_type` (`record_type`,`record_key`,`org_id`);2022-12-29 10:11:16
+3create provenance_type tableCREATE TABLE IF NOT EXISTS `provenance_type` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `record_key` TEXT NOT NULL
+, `record_type` TEXT NOT NULL
+, `provenance` TEXT NOT NULL
+3add column send_alerts_to in ngalert_configurationalter table `ngalert_configuration` ADD COLUMN `send_alerts_to` INTEGER NOT NULL DEFAULT 0 3add index in ngalert_configuration on org_id columnCREATE UNIQUE INDEX `UQE_ngalert_configuration_org_id` ON `ngalert_configuration` (`org_id3create_ngalert_configuration_tableCREATE TABLE IF NOT EXISTS `ngalert_configuration` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `alertmanagers` TEXT NULL
+, `created_at` INTEGER NOT NULL
+, `updated_at` INTEGER NOT NULL
+3add configuration_hash column to alert_configurationalter table `alert_configuration` ADD COLUMN `configuration_hash` TEXT NOT NULL DEFAULT '3add index in alert_configuration table on org_id columnCREATE INDEX `IDX_alert_configuration_org_id` ON `alert_configuration` (`org_id`);20223Add column default in alert_configurationalter table `alert_configuration` ADD COLUMN `default` INTEGER NOT NULL DEFAULT 0 2022-12-29 10:11:13create_alert_configuration_tableCREATE TABLE IF NOT EXISTS `alert_configuration` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `alertmanager_configuration` TEXT NOT NULL
+, `configuration_version` TEXT NOT NULL
+, `created_at` INTEGER NOT NULL
+3add rule_group_idx column to alert_rule_versionalter table `alert_rule_version` ADD COLUMN `rule_group_idx` INTEGER NOT NULL DEFAULT 1 2022-12-29 10:11:16[
+3add column labels to alert_rule_versionalter table `alert_rule_version` ADD COLUMN `labels` TEXT NULL 2022-12-29 10:11:16
+3add column annotations to alert_rule_versionalter table `alert_rule_version` ADD COLUMN `annotations` TEXT NULL 2022-12-29 10:11:16
+@@=d col)mn M{r to alert_rule_versionalter table `alert_rule_version` ADD COLUMN `for` INTEGER NOT NULL DEFAULT 0 2022-12-29 10:11:16'
+        "alertmanager_config": {
+           "route": {
+            "receiver": "grafana-default-email",
+            "group_by": ["grafana_folder", "alertname"]
+           },
+           "receivers": [{
+            "name": "grafana-default-email",
+            "grafana_managed_receiver_configs": [{
+             "uid": "",
+             "name": "email receiver",
+             "type": "email",
+             "isDefault": true,
+             "settings": {
+                "addresses": "<example@email.com>"
+             }
+            }]
+           }]
+        }
+}
+v1c­gÄe0528a75784033ae7b15c40851d89484
+Ýüþq
+ ¤
+
+
+
+7       ÃÙ1óòY*¾/
+                 #tabledata_keysdata_keys§CREATE TABLE `data_keys` (
+"name" TEXT PRIMARY KEY NOT NULL
+, `active` INTEGER NOT NULL
+, `scope` TEXT NOT NULL
+, `provider` TEXT NOT NULL
+, `encrypted_data` BLOB NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+, "label" TEXT NOT NULL DEFAULT '')I+AindexUQE_library_element_org_id_uidlibrary_element¦CREATE UNIQUE INDEX `UQE_library_element_org_id_uid` ON `library_element` (`org_id`,`uid`)A=indexUQE_library_element_connection_element_id_kind_connection_idlibrary_element_connection¥CREATE UNIQUE INDEX `UQE_library_element_connection_element_id_kind_connection_id` ON `library_element_connection` (`element_id`,`kind`,`connection_id`):AA}tablelibrary_element_connectionlibrary_element_connection¤CREATE TABLE `library_element_connection` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `element_id` INTEGER NOT NULL
+, `kind` INTEGER NOT NULL
+, `connection_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `created_by` INTEGER NOT NULL
+)I+     indexUQE_library_element_org_id_folder_id_name_kindlibrary_element¢CREATE UNIQUE INDEX `UQE_library_element_org_id_folder_id_name_kind1?indexIDX_alert_rule_version_rule_org_id_rule_namespace_uid_rule_groupalert_rule_versionCREATE INDEX `IDX_alert_rule_version_rule_org_id_rule_namespace_uid_rule_group` ON `alert_rule_version` (`rule_org_id`,`rule_namespace_uid`,`rule_group`)Ys1indexUQE_alert_rule_version_rule_org_id_rule_uid_versionalert_rule_versionCREATE UNIQUE INDEX `UQE_alert_rule_version_rule_org_id_rule_uid_version` ON `alert_rule_version` (`rule_org_id`,`rule_uid`,`version`)f++tablelibrary_elementlibrary_element¡CREATE TABLE `library_element` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `folder_id` INTEGER NOT NULL
+, `uid` TEXT NOT NULL
+, `name` TEXT NOT NULL
+, `kind` INTEGER NOT NULL
+, `type` TEXT NOT NULL
+, `description` TEXT NOT NULL
+, `model` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `created_by` INTEGER NOT NULL
+, `updated` DATETIME NOT NULL
+, `updated_by` INTEGER NOT NULL
+, `version` INTEGER NOT NULL
+)t7#indexUQE_alert_image_tokenalert_image CREATE UNIQUE INDEX `UQE_alert_image_token` ON `alert_image` (`token`)y##7tablealert_imagealert_imagePo+indexUQE_provenance_type_record_type_record_key_org_idprovenance_typer++tableprovenance_typeprovenance_typeM7EindexUQE_ngalert_configuration_org_idngalert_configurationCREATE UNIQUE INDEX `UQE_ngalert_configuration_org_id` ON `ngalert_configuration` (`org_id`)577
+                                                                                                                             tablengalert_configurationngalert_configuration REATE TABLE `ngalert_configuration` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `alertmanagers` TEXT NULL
+, `created_at` INTEGER NOT NULL
+, `updated_at` INTEGER NOT NULL
+, `send_alerts_to` INTEGER NOT NULL DEFAULT 0)I3/indexIDX_alert_configuration_org_idalert_configurationCREATE INDEX `IDX_alert_configuration_org_id` ON `alert_configuration` (`org_id`)
+                                          33
+;tablealert_configurationalert_configuration
+                                            ã
+                                             >
+                                              ë
+
+3add column display_namealter table `role` ADD COLUMN `display_name` TEXT NULL 2022-12-29 10:11:16/
+3create role tableCREATE TABLE IF NOT EXISTS `role` (                                              1
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `description` TEXT NULL
+, `version` INTEGER NOT NULL
+, `org_id` INTEGER NOT NULL
+, `uid` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3add unique index role_id_action_scopeCREATE UNIQUE INDEX `UQE_permission_role_id_action_scope` ON `permission` (`role_id`,`action`,`scope`);23create permission tableCREATE TABLE IF NOT EXISTS `permission` (role_id` ON `permission` (`role_id`);2022-12-29 10:11:16;Y
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `role_id` INTEGER NOT NULL
+, `action` TEXT NOT NULL
+, `scope` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3add index kv_store.org_id-namespace-keyCREATE UNIQUE INDEX `UQE_kv_store_org_id_namespace_key` ON `kv_store` (`org_id`,`namespace`,`key`);2022-12-29 10:11:16/=
+3create kv_store table v1CREATE TABLE IF NOT EXISTS `kv_store` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `namespace` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `value` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3create secrets tableCREATE TABLE IF NOT EXISTS `secrets` (RENAME COLUMN `name` TO `id`2022-12-29 10:11:16'5}10:11:16pvQu
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `namespace` TEXT NOT NULL
+, `type` TEXT NOT NULL
+, `value` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3create data_keys tableCREATE TABLE IF NOT EXISTS `data_keys` (
+`name` TEXT PRIMARY KEY NOT NULL
+, `active` INTEGER NOT NULL
+, `scope` TEXT NOT NULL
+, `provider` TEXT NOT NULL
+, `encrypted_data` BLOB NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3add unique index library_element org_id_uidCREATE UNIQUE INDEX `UQE_library_element_org_id_uid` ON `library_element` (`org_id`,`uid`);2022-123add index library_element_connection element_id-kind-connection_idCREATE UNIQUE INDEX `UQE_library_element_connection_element_id_kind_connection_id` ON `library_element_connection` (`element_id`,`kind`,`connection_id`);2022-12-29 10:11:16La
+create library_element_connection table v1CREATE TABLE IF NOT EXISTS `library_element_connection` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `element_id` INTEGER NOT NULL
+, `kind` INTEGER NOT NULL
+, `connection_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `created_by` INTEGER NOT NULL
+);2022-12-29 10:11:16Nu
+3add index library_element org_id-folder_id-name-kindCREATE UNIQUE INDEX `UQE_library_element_org_id_folder_id_name_kind` ON `library_element` (`org_id`,`folder_id`,`name`,`kind`);2022-12-29 10:11:16
+
+ee         %t33EYWkb2Jp4krootsecretKey.v1*YWVzLWNmYg*2451FeIu=ZߧÝ`ÛI pÃs&ƦªHü0[2022-12-29 10:19:302022-12-29 10:19:302022-12-29/root@secretKey.v1
+óó
+33alertmanagernotifications2022-12-29 10:26:162022-12-29 10:26:1!7!33datasourcesecretMigrationStatuscompatible2022-12-29 10:11:162022-12-29 10K?¬/÷6
+ N
+  Ü
+   7»      ?Ô-¿Û
+Ì
+%M?ðyA¡dþ%uindexUQE_role_uidrole´CREATE UNIQUE INDEX `UQE_role_uid` ON `role` (`uid`)&7U%]indexUQE_builtin_role_org_id_role_id_rolebuiltin_roleÁCREATE UNIQUE INDEX `UQE_builtin_role_org_id_role_id_role` ON `builtin_role` (`org_id`,`role_id`,`role`)
+3%%Utablebuiltin_rolebuiltin_role½CREATE TABLE `builtin_role` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `role` TEXT NOT NULL
+, `role_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+, `org_id` INTEGER NOT NULL DEFAULT 0)k27
+                                         indexIDX_user_role_user_iduser_role¼CREATE INDEX `IDX_user_role_user_id` ON `user_role` (`user_id`)p'
+Atablerolerole°CREATE TABLE `role` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `name` TEXT NOT NULL
+, `description` TEXT NULL
+, `version` INTEGER NOT NULL
+, `org_id` INTEGER NOT NULL
+, `uid` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+, `display_name` TEXT NULL, `group_name` TEXT NULL, `hidden` INTEGER NOT NULL DEFAULT 0)2 Eindexsqlite_autoindex_data_keys_1data_keys¨  èH
+                                                                                                                                          #tabledata_t6;%indexIDX_builtin_role_org_idbuiltin_role+
+                                                    #tabledata_keysdata_keys§CREATE TABLE `data_keys` (
+"name" TEXT PRIMARY KEY NOT NULL
+, `active` INTEGER NOT NULL
+, `scope` TEXT NOT NULL
+, `provider` TEXT NOT NULL
+, `encrypted_data` BLOB NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+tableuser_roleuser_role¹CREATE TABLE `user_role` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `role_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+)k.7
+    indexIDX_team_role_team_idteam_role¸CREATE INDEX `IDX_team_role_team_id` ON `team_role` (`team_id`)#-U]indexUQE_team_role_org_id_team_id_role_idteam_role·CREATE UNIQUE INDEX `UQE_team_role_org_id_team_id_role_id` ON `team_role` (`org_id`,`team_id`,`role_id`)h,5indexIDX_team_role_tableteam_roleteam_roleµCREATE TABLE `team_role` (` ON `team_role` (`org_id`)`+
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `team_id` INTEGER NOT NULL
+, `role_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+)l)5indexUQE_role_org_id_namerole³CREATE UNIQUE INDEX `UQE_role_org_id_name` ON `role` (`org_id`,`name`)S(+sindexIDX_role_org_idrole±CREATE INDEX `IDX_role_org_id` ON `role` (`org_id`)=
+                                           wtablerolerole°CREATE TABLE `role` (
+`id` INTEGER #1U]indexUQE_user_role_org_id_user_id_role_iduser_role»CREATE UNIQUE INDEX `UQE_user_role_org_id_user_id_role_id` ON `user_role` (`org_id`,`user_id`,`role_id`)h05indexIDX_user_role_org_iduser_roleºCREATE INDEX `IDX_user_role_org_id` ON `user_role` (`org_id`)!&S!YindexUQE_permission_role_id_action_scopepermission¯CREATE UNIQUE INDEX `UQE_permission_role_id_action_scope` ON `permission` (`role_id`,`action`,`scope`)o%9!indexIDX_permission_role_idpermission®CREATE INDEX `IDX_permission_role_id` ON `permission` (`role_id`)y$!!;tablepermissionpermission­CREATE TABLE `permission` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `role_id` INTEGER NOT NULL
+, `action` TEXT NOT NULL
+, `scope` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+)#OQindexUQE_kv_store_org_id_namespace_keykv_store¬CREATE UNIQUE INDEX `UQE_kv_store_org_id_namespace_key` ON `kv_store` (`org_id`,`namespace`,`key`)
+       "gtablekv_storekv_storeªCREATE TABLE `kv_store` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `namespace` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `value` TEXT NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+)!_tablesecretssecrets©CREATE TABLE `secrets` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `namespace` TEXT NOT NULL
+, `type` TEXT NOT NULL
+, `value` TEXT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+)
+ Û»     %alertmanagersilences   %'alertmanagernotifications!7   datasourcesecretMigrationStatus
+
+
+
+d
+ ë
+ç
+3add index query_history.org_id-created_by-datasource_uidCREATE INDEX `IDX_query_history_org_id_created_by_datasource_uid` ON `query_history` (`org_id`,`created_by`,`datasource_uid`);2022-12-29 10:11:16G
+3create query_history table v1CREATE TABLE IF NOT EXISTS `query_history` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `uid` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `datasource_uid` TEXT NOT NULL
+, `created_by` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+, `comment` TEXT NOT NULL
+, `queries` TEXT NOT NULL
+3add unique index builtin_role_role_nameCREATE UNIQUE INDEX `UQE_seed_assignment_builtin_role_role_name` ON `seed_assignment` (`builtin_role`,3create seed assignment tableCREATE TABLE IF NOT EXISTS `seed_assignment` (
+`builtin_role` TEXT NOT NULL
+, `role_name` TEXT NOT NULL
+3add unique index builtin_role_org_id_role_id_roleCREATE UNIQUE INDEX `UQE_builtin_role_org_id_role_id_role` ON `builtin_role` (`org_id`,`role3add index builtin_role.org_idCREATE INDEX `IDX_builtin_role_org_id` ON `builtin_role` (`org_id`);2022-12-29 10:11:16
+3create builtin role tableCREATE TABLE IF NOT EXISTS `builtin_role` (` ON `builtin_role` (`role_id`);2022-12-29 10:11:1?)-29 10:11:16C
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `role` TEXT NOT NULL
+, `role_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+, `updated` DATETIME NOT NULL
+3add unique index user_role_org_id_user_id_role_idCREATE UNIQUE INDEX `UQE_user_role_org_id_user_id_role_id` ON `user_role` (`org_id`,`user_id`,`role_id`);2022-12-29 10:11:16s
+3add index user_role.org_idCREATE INDEX `IDX_user_role_org_id` ON `user_role` (`org_id`);2022-12-29 10:11:16
+3create user role tableCREATE TABLE IF NOT EXISTS `user_role` (                                            9+
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `user_id` INTEGER NOT NULL
+, `role_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+);2022-12-29 10:11:16v
+3add unique index team_role_org_id_team_id_role_idCREATE UNIQUE INDEX `UQE_team_role_org_id_team_id_role_id` ON `team_role` (`org_id`,`team_id3create team role tableCREATE TABLE IF NOT EXISTS `team_role` (ON `team_role` (`org_id`);2022-12-29 10:11:19+
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `team_id` INTEGER NOT NULL
+, `role_id` INTEGER NOT NULL
+, `created` DATETIME NOT NULL
+3add index role.org_idCREATE INDEX `IDX_role_org_id` ON `role` (`org_id`);2022-12-29 10:11:16d`,`name`);2022-12-29 10:11:16c7u
+
+
+
+
+
+
+
+
+
+
+
+
+
+3
+ ç
+  z
+3add unique index builtin_role_action_scopeCREATE UNIQUE INDEX `UQE_seed_assignment_builtin_role_action_scope` ON `seed_assignment` (`builtin_3add unique index builtin_role_name backCREATE UNIQUE INDEX `UQE_seed_assignment_builtin_role_role_name` ON `seed_assignment` (`builtin_role`,`role_name`);2022-12-29 10:11:16Ls
+3update seed_assignment role_name column to nullableALTER TABLE seed_assignment ADD COLUMN tmp_role_name VARCHAR(190) DEFAULT NULL;
+UPDATE seed_assignment SET tmp_role_name = role_name;
+ALTER TABLE seed_assignment DROP COLUMN role_name;
+uÒ¸GÐ&ÒABLE seed_assignment RENAME COLUMN tmp_role_name TO role_name;2022-12-29 10:11:16
+ §
+  ¾
+
+úpÂC5indexUQE_file_meta_path_hash_keyfile_metaÙCREATE UNIQUE INDEX `UQE_file_meta_path_hash_key` ON `file_meta` (`path_hash`,`key`)LUtablefile_metafile_metaØCREATE TABLE `file_meta` (
+`path_hash` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `value` TEXT NOT NULL
+indexUQE_file_path_hashfileÖCREATE UNIQUE INDEX `UQE_file_path_hash` ON `file` (`path_hash`)rION `file` (`parent_folder_path_hash`)dJ1
+EtablefilefileÕCREATE TABLE `file` (
+`path` TEXT NOT NULL
+, `path_hash` TEXT NOT NULL
+, `parent_folder_path_hash` TEXT NOT NULL
+, `contents` BLOB NOT NULL
+, `eta¸²++tableseed_assignmentseed_assignmentÂCREATE TABLE `seed_assignment` (
+`builtin_role` TEXT NOT NULL
+, `role_name` TEXT NOT NULL
+, `action` TEXT NULL, `scope` TEXT NULL)Q8%uindexUQE_role_uidrole´CREATE UNIQUE INDEX `UQE_role_uid` ON `role` (`uid`)&7U%]indexUQE_builtin_role_org_id_role_id_rolebuiltin_roleÁCREATE UNIQUE INDEX `UQE_builtin_role_org_id_role_id_role` ON `builtin_role` (`org_id`,`role_id`,`role`)t6;%indexIDX_builtin_role_org_idbuiltin_roleÀCREATE INDEX `IDX_builtin_role_org_id` ON `builtin_role` (`org_id`)n57%
+                                                                                                                 indexIDX_builtin_role_rolebuiltin_role¿CREATE INDEX `IDX_builtin_role_role` ON `builtin_role` (`role`)w4=%indexIDX_builtin_role_role_idbuiltin_role¾CREATE INDEX `IDX_builtin_role_role_id` ON `builtin_role` (`role_id`)_D--otabledashboard_publicdashboard_publicÏCREATE TABLE "dashboard_public" (
+`uid` TEXT PRIMARY KEY NOT NULL
+, `dashboard_uid` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `time_settings` TEXT NULL
+, `template_variables` TEXT NULL
+, `access_token` TEXT NOT NULL
+, `created_by` INTEGER NOT NULL
+, `updated_by` INTEGER NULL
+, `created_at` DATETIME NOT NULL
+, `updated_at` DATETIME NULL
+, `is_enabled` INTEGER NOT NULL DEFAULT 0
+, `annotations_enabled` INTEGER NOT NULL DEFAULT 0)KC%%Wtableentity_evententity_eventÎCREATE TABLE `entity_event` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `entity_id` TEXT NOT NULL
+, `event_type` TEXT NOT NULL
+, `created` INTEGER NOT NULL
+)|BA#indexIDX_correlation_source_uidcorrelationÍCREATE INDEX `IDX_correlation_source_uid` ON `correlation` (`source_uid`)gA3#indexIDX_correlation_uidcorrelationÌCREATE INDEX `IDX_correlation_uid` ON `correlation` (`uid`)6@I#indexsqlite_autoindex_correlation_1correlationˁz?##9tablecorrelationcorrelationÊCREATE TABLE `correlation` (
+`uid` TEXT NOT NULL
+, `source_uid` TEXT NOT NULL
+, `target_uid` TEXT NULL
+, `label` TEXT NOT NULL
+, `description` TEXT NOT NULL
+, `config` TEXT NULL, PRIMARY KEY ( `uid`,`source_uid` ))6>]1iindexUQE_query_history_star_user_id_query_uidquery_history_starÉCREATE UNIQUE INDEX `UQE_query_history_star_user_id_query_uid` ON `query_history_star` (`user_id`,`query_uid`)e=11stablequery_history_starquery_history_starÈCREATE TABLE `query_history_star` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `query_uid` TEXT NOT NULL
+, `user_id` INTEGER NOT NULL
+, `org_id` INTEGER NOT NULL DEFAULT 1)J<q'indexIDX_query_history_org_id_created_by_datasource_uidquery_historyÆCREATE INDEX `IDX_query_history_org_id_created_by_datasource_uid` ON `query_history` (`org_id`,`created_by`,`datasource_uid`)?;''
+                                                                                                  ;tablequery_historyquery_historyÅCREATE TABLE `query_history` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `uid` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `datasource_uid` TEXT NOT NULL
+, `created_by` INTEGER NOT NULL
+, `created_at` INTEGER NOT NULL
+, `comment` TEXT NOT NULL
+, `queries` TEXT NOT NULL
+)Ha+qindexUQE_seed_assignment_builtin_role_role_nameseed_assignmentÃCREATE UNIQUE INDEX `UQE_seed_assiW9++ctableseed_assignm;979++#tableseed_assignmentseed_assignmentÂCREATE TABLE `seed_assignment` (
+`builtin_role` TEXT NOT NULL
+, `action` TEXT NULL, `scope` TEXT NULL, role_name VARCHAR(190) DEFAULT NULL)
+QSÈ{/
+
+
+
+3drop index IDX_dashboard_public_config_org_id_dashboard_uid - v2DROP INDEX `IDX_dashboard_public_config_org_id_dashboard_uid`2022-12-29 10:113create index IDX_dashboard_public_config_org_id_dashboard_uid - v1CREATE INDEX `IDX_dashboard_public_config_org_id_dashboard_uid` ON `dashboa3create index UQE_dashboard_public_config_uid - v1CREATE UNIQUE INDEX `UQE_dashboard_public_config_uid` ON `dashboard_public_config` (`uid`);2022-12-29 10:11:16AS
+3recreate dashboard public config v1CREATE TABLE IF NOT EXISTS `dashboard_public_config` (
+`uid` TEXT PRIMARY KEY NOT NULL
+, `dashboard_uid` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `time_settings` TEXT NOT NULL
+, `refresh_rate` INTEGER NOT NULL DEFAULT 30
+, `template_variables` TEXT NULL
+3drop index IDX_dashboard_public_config_org_id_dashboard_uid - v1DROP INDEX `IDX_dashboard_public_config_org_id_dashboard_uid`2022-12-29 10:113drop index UQE_dashboard_public_config_uid - v1DROP INDEX `UQE_dashboard_public_config_uid`2022-12-29 10:11:16?O
+3create dashboard public config v1CREATE TABLE IF NOT EXISTS `dashboard_public_config` (
+`uid` TEXT PRIMARY KEY NOT NULL
+, `dashboard_uid` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `time_settings` TEXT NOT NULL
+, `refresh_rate` INTEGER NOT NULL DEFAULT 30
+, `template_variables` TEXT NULL
+3create entity_events tableCREATE TABLE IF NOT EXISTS `entity_event` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `entity_id` TEXT NOT NULL
+, `event_type` TEXT NOT NULL
+, `created` INTEGER NOT NULL
+3create correlation table v1CREATE TABLE IF NOT EXISTS `correlation` (elation` (`uid`);2022-12-29 10:11:16C/2022-12-29 10:11:16qA
+`uid` TEXT NOT NULL
+, `source_uid` TEXT NOT NULL
+, `target_uid` TEXT NULL
+, `label` TEXT NOT NULL
+, `description` TEXT NOT NULL
+3add index query_history.user_id-query_uidCREATE UNIQUE INDEX `UQE_query_history_star_user_id_query_uid` ON `query_history_star` (`user_id`,`q3create query_history_star table v1CREATE TABLE IF NOT EXISTS `query_history_star` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
+, `query_uid` TEXT NOT NULL
+, `user_id` INTEGER NOT NULL
+3alter table query_history alter column created_by type to bigintSELECT 0;2022-12-29 10:11:16
+
+
+
+
+
+~)Ï
+ ¤
+  Ý
+   >
+¦
+3create file_meta tableCREATE TABLE IF NOT EXISTS `file_meta` (h_hash_key` ON `file_meta` (`path_hash`,`key`);2022-12-29 10:11:16$9s10:11:16SL
+`path_hash` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `value` TEXT NOT NULL
+3file table idx: parent_folder_path_hash fast folder retrievalCREATE INDEX `IDX_file_parent_folder_path_hash` ON `file` (`parent_folder_path_h3file table idx: path natural pkCREATE UNIQUE INDEX `UQE_file_path_hash` ON `file` (`path_hash`);2022-12-29 10:11:16/
+3create file tableCREATE TABLE IF NOT EXISTS `file` (
+`path` TEXT NOT NULL
+, `path_hash` TEXT NOT NULL
+, `parent_folder_path_hash` TEXT NOT NULL
+, `contents` BLOB NOT NULL
+, `etag` TEXT NOT NULL
+, `cache_control` TEXT NOT NULL
+, `content_disposition` TEXT NOT NULL
+, `updated` DATETIME NOT NULL
+, `created` DATETIME NOT NULL
+, `size` INTEGER NOT NULL
+, `mime_type` TEXT NOT NULL
+3Rename table dashboard_public_config to dashboard_public - v2ALTER TABLE `dashboard_public_config` RENAME TO `dashboard_public`2022-12-29 10:3create index UQE_dashboard_public_config_access_token - v2CREATE UNIQUE INDEX `UQE_dashboard_public_config_access_token` ON `dashboard_public3create index IDX_dashboard_public_config_org_id_dashboard_uid - v2CREATE INDEX `IDX_dashboard_public_config_org_id_dashboard_uid` ON `dashboa3create index UQE_dashboard_public_config_uid - v2CREATE UNIQUE INDEX `UQE_dashboard_public_config_uid` ON `dashboard_public_config` (`uid`);23Recreate dashboard public config v2CREATE TABLE IF NOT EXISTS `dashboard_public_config` (
+`uid` TEXT PRIMARY KEY NOT NULL
+, `dashboard_uid` TEXT NOT NULL
+, `org_id` INTEGER NOT NULL
+, `time_settings` TEXT NULL
+, `template_variables` TEXT NULL
+, `access_token` TEXT NOT NULL
+, `created_by` INTEGER NOT NULL
+, `updated_by` INTEGER NULL
+, `created_at` DATETIME NOT NULL
+, `updated_at` DATETIME NULL
+, `is_enabled` INTEGER NOT NULL DEFAULT 0
+);2022-12-29 10:11:16
+
+
+
+
+
+
+¸)g
+ B
+  Û
+   P
+È
+>       ;
+Y55Atableseed_assignm2Sa+cindexUQE_seed_assignment_builtin_role_role_nameseed_assignmentÜCREATE UNIQUE INDEX UQE_seed_assignment_builtin_role_role_name ON seed_assignment (builtin_role, role_name)<Rg+qindexUQE_seed_assignment_builtin_role_action_scopeseed_assignmentÂCREATE UNIQUE INDEX UQE_seed_assignment_builtin_role_action_scope ON seed_assignment (builtin_role, action, scope)CQ++;tableseed_assignmentseed_assignmentÞCREATE TABLE "seed_assignment" (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+            builtin_role TEXT,
+            action TEXT,
+            scope TEXT,
+            role_name TEXT
+           )yN;%indexUQE_playlist_org_id_uidplaylistÚCREATE UNIQUE INDEX `UQE_playlist_org_id_uid` ON `playlist` (`org_id`,`uid`)MC5indexUQE_file_meta_path_hash_keyfile_metaÙCREATE UNIQUE INDEX `UQE_file_meta_path_hash_key` ON `file_meta` (`path_hash`,`key`)LUtablefile_metafile_metaØCREATE TABLE `file_meta` (
+`path_hash` TEXT NOT NULL
+, `key` TEXT NOT NULL
+, `value` TEXT NOT NULL
+indexUQE_file_path_hashfileÖCREATE UNIQUE INDEX `UQE_file_path_hash` ON `file` (`path_hash`)rION `file` (`parent_folder_path_hash`)dJ1
+EtablefilefileÕCREATE TABLE `file` (
+`path` TEXT NOT NULL
+, `path_hash` TEXT NOT NULL
+, `parent_folder_path_hash` TEXT NOT NULL
+, `contents` BLOB NOT NULL
+, `etag` TEXT NOT NULL
+, `cache_control` TEXT NOT NULL
+, `content_disposition` TEXT NOT NULL
+, `updated` DATETIME NOT NULL
+, `created` DATETIME NOT NULL
+, `size` INTEGER NOT NULL
+, `mime_type` TEXT NOT NULL
+)+H]-WindexUQE_dashboard_public_config_access_tokendashboard_publicÔCREATE UNIQUE INDEX `UQE_dashboard_public_config_access_token` ON "dashboard_public" (`access_token`)>Gm-mindexIDX_dashboard_public_config_org_id_dashboard_uiddashboard_publicÓCREATE INDEX `IDX_dashboard_public_config_org_id_dashboard_uid` ON "dashboard_public" (`org_id`,`dashboard_uid`)FK-3indexUQE_dashboard_public_config_uiddashboard_publicÑCREATE UNIQUE INDEX `UQE_dashboard_public_config_uid` ON "dashboard_public" (`uid`)@ES-indexsqlite_autoindex_dashboard_public_1dashboard_publicÐ
